@@ -12,7 +12,6 @@ public class IntegratedMenuGUI extends JFrame {
     private LinkedList<Integer> linkedListLL = new LinkedList<>();
     private LinkedList<Integer> linkedListLLSorted = new LinkedList<>();
 
-
     private BinarySearchTree bst; // binary search tree
 
     public IntegratedMenuGUI() {
