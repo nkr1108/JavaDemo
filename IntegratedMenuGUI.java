@@ -8,8 +8,11 @@ public class IntegratedMenuGUI extends JFrame {
     private JTextArea textArea;
     private int[] UnSortedArrayData; // for storing random and file array data
     private int[] sortedArrayData; // sorted array
-    private LinkedList<Integer> listUnsortedLL; // this is unsorted linked list
-    private LinkedList<Integer> listSortedLL; // sorted linked list
+
+    private LinkedList<Integer> linkedListLL = new LinkedList<>();
+    private LinkedList<Integer> linkedListLLSorted = new LinkedList<>();
+
+
     private BinarySearchTree bst; // binary search tree
 
     public IntegratedMenuGUI() {
@@ -103,8 +106,8 @@ public class IntegratedMenuGUI extends JFrame {
 
         // Store data in Linked List, then display it on the screen
         linkedListItem.addActionListener(e -> {
-            listUnsortedLL = createLinkedList(UnSortedArrayData);
-            displayLinkedList(listUnsortedLL);
+            linkedListLL = createLinkedList(UnSortedArrayData);
+            linkedListLL.displayLinkedList(textArea);
         });
 
         // take unsorted array data and sorts them using merge sort then display the same on screen
@@ -116,8 +119,9 @@ public class IntegratedMenuGUI extends JFrame {
 
         // take unsorted linked list and sort it and then display it
         sortLLItem.addActionListener(e -> {
-            listSortedLL = mergeSortLL(listUnsortedLL); // bad
-            displayLinkedList(listSortedLL); // good
+            linkedListLLSorted = linkedListLL.copy();
+            linkedListLLSorted.mergeSort();
+            linkedListLLSorted.displayLinkedList(textArea);
         });
 
 
@@ -137,12 +141,27 @@ public class IntegratedMenuGUI extends JFrame {
             textArea.setText("Search in Unsorted Array:\nValue " + target + (found ? " found." : " not found."));
         });
 
+        // search using unsorted linked list
+        searchUnsortedLinkedList.addActionListener( Act -> {
+            int target = getSearchTarget();
+            boolean found = linkedListLL.search(target);
+            textArea.setText("Search in Unsorted Linked List:\nValue " + target + (found ? " found." : " not found."));
+        });
+
         // search using sorted array
         searchSortedArray.addActionListener(e -> {
             int target = getSearchTarget();
             boolean found = binarySearch(sortedArrayData, target);
             textArea.setText("Search in Sorted Array:\nValue " + target + (found ? " found." : " not found."));
         });
+
+        // search using sorted linked list
+        searchSortedLinkedList.addActionListener( Act -> {
+            int target = getSearchTarget();
+            boolean found = linkedListLLSorted.search(target);
+            textArea.setText("Search in Sorted Linked List:\nValue " + target + (found ? " found." : " not found."));
+        });
+
 
         // searching Binary Search Tree MMM
         searchBST.addActionListener(e -> {
@@ -198,64 +217,13 @@ public class IntegratedMenuGUI extends JFrame {
         }
     }
 
+
     private LinkedList<Integer> createLinkedList(int[] data) {
         LinkedList<Integer> list = new LinkedList<>();
         for (int num : data) {
-            list.add(num);
+            list.insert(num);
         }
         return list;
-    }
-
-    private LinkedList<Integer> mergeSortLL(LinkedList<Integer> list) {
-        if (list.size() <= 1) {
-            return list;
-        }
-
-        int mid = list.size() / 2;
-        LinkedList<Integer> leftList = new LinkedList<>();
-        LinkedList<Integer> rightList = new LinkedList<>();
-
-        int index = 0;
-        for (int num : list) {
-            if (index < mid) {
-                leftList.add(num);
-            } else {
-                rightList.add(num);
-            }
-            index++;
-        }
-
-        leftList = mergeSortLL(leftList);
-        rightList = mergeSortLL(rightList);
-
-        return mergeLL(leftList, rightList);
-    }
-
-    private LinkedList<Integer> mergeLL(LinkedList<Integer> left, LinkedList<Integer> right) {
-        LinkedList<Integer> result = new LinkedList<>();
-        while (!left.isEmpty() && !right.isEmpty()) {
-            if (left.peek() <= right.peek()) {
-                result.add(left.poll());
-            } else {
-                result.add(right.poll());
-            }
-        }
-        result.addAll(left);
-        result.addAll(right);
-        return result;
-    }
-
-
-    private void displayLinkedList(LinkedList<Integer> list) {
-        textArea.setText("");
-        int count = 0;
-        for (int num : list) {
-            textArea.append(num + " ");
-            count++;
-            if (count % 20 == 0) {
-                textArea.append("\n");
-            }
-        }
     }
 
 
