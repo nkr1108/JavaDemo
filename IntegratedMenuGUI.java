@@ -14,6 +14,8 @@ public class IntegratedMenuGUI extends JFrame {
 
     private BinarySearchTree bst; // binary search tree
 
+    int comparisonCount = 0; // for performance management using count comparison
+
     public IntegratedMenuGUI() {
         setTitle("CS401 Final Project - Mandakini");
         setSize(800, 600);
@@ -133,11 +135,14 @@ public class IntegratedMenuGUI extends JFrame {
             displayBST(bst);
         });
 
+        // SEARCH IMPLEMENTATION
         // search using unsorted array
         searchUnsortedArray.addActionListener( Act -> {
             int target = getSearchTarget();
+            comparisonCount = 0;
             boolean found = linearSearch(UnSortedArrayData, target);
             textArea.setText("Search in Unsorted Array:\nValue " + target + (found ? " found." : " not found."));
+            textArea.append("\nUnsorted Array Search Comparison: " + comparisonCount);
         });
 
         // search using unsorted linked list
@@ -145,13 +150,16 @@ public class IntegratedMenuGUI extends JFrame {
             int target = getSearchTarget();
             boolean found = linkedListLL.search(target);
             textArea.setText("Search in Unsorted Linked List:\nValue " + target + (found ? " found." : " not found."));
+            textArea.append("\nUnsorted Linked List Search Comparison: " + linkedListLL.getComparisionCount());
         });
 
         // search using sorted array
         searchSortedArray.addActionListener(e -> {
             int target = getSearchTarget();
+            comparisonCount = 0;
             boolean found = binarySearch(sortedArrayData, target);
             textArea.setText("Search in Sorted Array:\nValue " + target + (found ? " found." : " not found."));
+            textArea.append("\nSorted Array Search Comparison: " + comparisonCount);
         });
 
         // search using sorted linked list
@@ -159,14 +167,17 @@ public class IntegratedMenuGUI extends JFrame {
             int target = getSearchTarget();
             boolean found = linkedListLLSorted.search(target);
             textArea.setText("Search in Sorted Linked List:\nValue " + target + (found ? " found." : " not found."));
+            textArea.append("\nSorted Linked List Comparison: " + linkedListLLSorted.getComparisionCount());
         });
 
 
-        // searching Binary Search Tree MMM
+        // searching Binary Search Tree
         searchBST.addActionListener(e -> {
             int target = getSearchTarget();
+            comparisonCount = 0;
             boolean found = bst.search(target);
             textArea.setText("Search in BST:\nValue " + target + (found ? " found." : " not found."));
+            textArea.append("\nBinary Search Tree Comparison: " + bst.getComparisonCount());
         });
 
     }
@@ -285,7 +296,10 @@ public class IntegratedMenuGUI extends JFrame {
 
     private boolean linearSearch(int[] data, int target) {
         for (int val : data) {
-            if (val == target) return true;
+            if (val == target) {
+                return true;
+            }
+            comparisonCount++; // Counting comparisons
         }
         return false;
     }
@@ -294,6 +308,7 @@ public class IntegratedMenuGUI extends JFrame {
         int left = 0, right = data.length - 1;
         while (left <= right) {
             int mid = (left + right) / 2;
+            comparisonCount++;
             if (data[mid] == target) return true;
             if (data[mid] < target) left = mid + 1;
             else right = mid - 1;
