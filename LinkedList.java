@@ -2,6 +2,7 @@ import javax.swing.*;
 
 class LinkedList<T extends Comparable<T>> {
     public LLNode<T> head;
+    private int comparisionCount = 0;
 
     // Insert at the end of the list
     public void insert(T data) {
@@ -109,13 +110,19 @@ class LinkedList<T extends Comparable<T>> {
     // Iterative search in the linked list
     public boolean search(T key) {
         LLNode<T> temp = head;
+        comparisionCount = 0;
         while (temp != null) {
+            comparisionCount++;
             if (temp.data.equals(key)) {
                 return true; // Found the key
             }
             temp = temp.next; // Move to the next node
         }
         return false; // Key not found
+    }
+
+    public int getComparisionCount(){
+        return comparisionCount;
     }
 
     // Method to create a copy of the linked list
